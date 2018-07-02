@@ -14,10 +14,11 @@ client.on('message', msg =>
 	{
 		var command = msg.content.slice(prefix.length, msg.content.length);
 		console.log("Command : " + command);
-	}
-	if (msg.content === 'ping') 
-	{
-		msg.reply('pongMOTHER FUCKER');
+		
+		if (msg.content === 'ping') 
+		{
+			msg.reply('pongMOTHER FUCKER');
+		}	
 	}
 });
 
