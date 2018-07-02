@@ -2,6 +2,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 const prefix = "ble! "
+const lotoArr = [];
+
+
 
 client.on('ready', () => 
 {
@@ -19,6 +22,14 @@ client.on('message', msg =>
 		{
 			msg.reply('pongMOTHER FUCKER');
 		}	
+		if (command === 'api')
+		{
+			msg.reply('https://discord.js.org/')
+		}
+		if (command === 'add')
+		{
+			//testing
+		}
 	}
 });
 
