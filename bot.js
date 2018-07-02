@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const prefix = "ble!"
+const prefix = "ble! "
 
 client.on('ready', () => 
 {
