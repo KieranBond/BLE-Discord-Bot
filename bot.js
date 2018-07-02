@@ -16,7 +16,9 @@ client.on('message', msg =>
 {
 	if(msg.content.startsWith(prefix))
 	{
-		var command = msg.content.slice(prefix.length, msg.content.length);
+		var params = msg.content.split(' '); //gets all values into an array
+		var command = params[1]; //second in array
+		
 		console.log("Command : " + command);
 		
 		if (command == 'ping') 
@@ -25,11 +27,12 @@ client.on('message', msg =>
 		}	
 		if (command === 'api')
 		{
-			msg.reply('https://discord.js.org/')
+			msg.reply('https://discord.js.org/');
 		}
 		if (command === 'add')
 		{
-			//testing
+			msg.reply('found add');
+			msg.reply('param 3 = ' + params[2]);
 		}
 	}
 });
