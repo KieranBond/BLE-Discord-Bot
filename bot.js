@@ -9,6 +9,7 @@ const lotoArr = [];
 client.on('ready', () => 
 {
   console.log(`Logged in as ${client.user.tag}!`);
+  client.user.setActivity('ble! help');
 });
 
 client.on('message', msg => 
