@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const prefix = "ble! "
+const prefix = "!ble "
 const lottoArr = [];
 var lastWinner;
 
@@ -9,7 +9,7 @@ var lastWinner;
 client.on('ready', () => 
 {
   console.log(`Logged in as ${client.user.tag}!`);
-  client.user.setActivity('ble! help');
+  client.user.setActivity(prefix + 'help');
 });
 
 client.on('message', msg => 
@@ -130,7 +130,7 @@ function GetHelpString()
 {
 	return "\n\n*Commands*:\n" +
 	"\t**__Assortment__**\n" +
-	"\t• Ping: Pong.\n" + 
+	"\t• Ping: |\n\t\t\t\t\t•\n\t\t\t\t\t\t\t|\n" + 
 	"\t• API: Cheeky link to the Node.js API.\n" +
 	"\n\t**__Lotto__**\n" + 
 	"\t• LottoAdd: Adds to the Lotto roll list.\n" + 
