@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
 const ping = require('ping'); //will reqire NPM install:  "npm i ping"
 const client = new Discord.Client();
+const ConfigFile = require("./Config.json");
 
-const prefix = "!ble "
+const prefix = "!ble ";
 const lottoArr = [];
 var lastWinner;
 
@@ -125,102 +126,7 @@ client.on('message', msg =>
 			default:
 				console.log('no command found');
 				msg.reply("There is no command: < " + command + " > check your shit");
-		}
-				
-			
-			
-				
-		/*		
-		if(command == 'help')
-		{
-			var helpString = GetHelpString();
-			console.log(helpString);
-			channel.send(helpString);
-		}
-		else if (command == 'ping') 
-		{
-			msg.reply('pong MOTHER FUCKER');
-		}	
-		else if (command === 'api')
-		{
-			msg.reply('https://discord.js.org/');
-		}
-		else if (command === 'lottoadd')
-		{
-			var addTos = [];
-			
-			if(params[2] != undefined)//Just check there's atleast one
-			{
-				//Adds multiple.
-				for(var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
-				{
-					msg.reply('adding: ' + params[i]);
-					lottoArr.push(params[i]);
-				}
-			}
-		
-			console.log('lottoArr = ' + lottoArr); //debug list
-		}
-		else if (command === 'lottoclear')
-		{
-			lottoArr = [];//Essentially wipes the array by creating a new one.
-			
-			msg.reply('list is now cleared');
-			console.log('list has been cleared');
-		}
-		else if (command === 'lottoall')
-		{
-			var allString = "";
-			var i;
-			for (i = 0; i < lottoArr.length; i++)
-			{
-				allString += lottoArr[i] + ", ";
-			}
-			allString = allString.substring(0, allString.length - 2);
-			
-			if(allString.length > 0) 
-			{
-				channel.send(allString);
-			}
-			else
-			{
-				channel.send('Lotto list is empty. Use LottoAdd command to add to list.');
-			}
-		}
-		else if (command === 'lottorand')
-		{
-			if(lottoArr.length > 0)
-			{
-				var rand = getRandomInt(0, lottoArr.length); 
-				msg.reply("and the winner is: ");
-				channel.send(lottoArr[rand]);
-				console.log(rand + lottoArr[rand]);
-				lastWinner = lottoArr[rand];
-			}
-			else
-			{
-				msg.reply('no lucky draw today. Lotto list is empty!');
-			}
-		}
-		else if(command === 'lottowinner')
-		{
-			if(lastWinner != undefined)
-			{
-				msg.reply("last winner was: `" + lastWinner + "`")
-			}
-			else
-			{
-				msg.reply('no winners yet!');
-				
-				if(lottoArr.length > 0)
-				{
-					msg.reply("but the list isn't empty.. Why not give it a spin with LottoRand?");
-				}
-			}
-		}
-		
-		*/ //might not have this close in right place. cant test at work :(
-		
+		}		
 	}
 });
 
@@ -228,7 +134,7 @@ client.on('message', msg =>
 
 //	---------------------------------
 
-	client.login('NDYzNDM2OTcyNTMxMzg0MzIx.DhwaRg.Prg9mgzyZtv8qPBCYxwvpogQscE');
+	client.login(ConfigFile.token);
 
 //	----------------------------------
 
