@@ -109,9 +109,9 @@ client.on('message', msg =>
 				}
 				break;
 				
-			case default:
+			default:
 				console.log('no command found');
-				msg.reply("There is no command: " + command + "check your shit");
+				msg.reply("There is no command: < " + command + " > check your shit");
 		}
 				
 			
