@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const ping = require('ping'); //will reqire NPM install:  "npm i ping"
 const client = new Discord.Client();
 
 const prefix = "!ble "
@@ -108,6 +109,18 @@ client.on('message', msg =>
 					}
 				}
 				break;
+				
+			case 'checkserver':
+				var hosts = ['google.com', '46.251.234.220'];
+				hosts.forEach(function(host){
+					ping.sys.probe(host, function(isAlive){
+						var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
+						channel.send(msg);
+						console.log(msg);
+					});
+				});
+				break;
+			
 				
 			default:
 				console.log('no command found');
