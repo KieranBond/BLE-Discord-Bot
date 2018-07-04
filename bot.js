@@ -124,21 +124,10 @@ client.on('message', msg =>
 				break;
 			
 			case 'tilleytest':
-				
-				/*
-				var person = 
-				{
-					firstName: "John",
-					lastName : "Doe",
-					id       : 5566,
-					fullName : function() {
-						return this.firstName + " " + this.lastName;
-					}
-				}
-				*/
-				
-				var test = TilleyTest.person.firstName;
-				//var test = TilleyTest.person.firstName //returns string hello world
+				var test = TilleyTest.testing;		
+				//run function from variable in TilleyTest;
+				channel.send(TilleyTest.res());
+				//print string variable i tilley test
 				channel.send(test);
 				break;
 				
