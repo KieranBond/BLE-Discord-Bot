@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const ping = require('ping'); //will reqire NPM install:  "npm i ping"
 const client = new Discord.Client();
 const ConfigFile = require("./Config.json");
+const TilleyTest = require("./scripts/tilleyTest");
 
 const prefix = "!ble ";
 const lottoArr = [];
@@ -122,6 +123,24 @@ client.on('message', msg =>
 				});
 				break;
 			
+			case 'tilleytest':
+				
+				/*
+				var person = 
+				{
+					firstName: "John",
+					lastName : "Doe",
+					id       : 5566,
+					fullName : function() {
+						return this.firstName + " " + this.lastName;
+					}
+				}
+				*/
+				
+				var test = TilleyTest.person.firstName;
+				//var test = TilleyTest.person.firstName //returns string hello world
+				channel.send(test);
+				break;
 				
 			default:
 				console.log('no command found');
