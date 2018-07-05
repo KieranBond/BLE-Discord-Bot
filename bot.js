@@ -13,8 +13,6 @@ var allowedRoles = [];
 
 
 
-donation.getValue();
-
 
 
 
