@@ -5,8 +5,10 @@ const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
 const lottoCommands = require("./commands/lotto");
 const donation = require ("./scripts/donationTracker");
+const thief = require("./scripts/theif");
 
 const prefix = "!ble ";
+const theifPre = "!thief";
 
 
 var allowedRoles = [];
@@ -24,6 +26,7 @@ client.on('ready', () =>
 
 client.on('message', msg => 
 {
+	
 	if(msg.content.startsWith(prefix))
 	{
 		const channel = msg.channel;
@@ -171,6 +174,10 @@ client.on('message', msg =>
 				//allowedRoles.push(roles);
 				
 				break;
+				
+				case 'thief':
+					thief.start(command)
+					break;
 					
 				default:
 					console.log('no command found');
