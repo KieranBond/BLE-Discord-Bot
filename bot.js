@@ -4,11 +4,19 @@ const client = new Discord.Client();
 const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
 const lottoCommands = require("./commands/lotto");
+const donation = require ("./scripts/donationTracker");
 
 const prefix = "!ble ";
 
 
 var allowedRoles = [];
+
+
+
+donation.getValue();
+
+
+
 
 client.on('ready', () => 
 {
