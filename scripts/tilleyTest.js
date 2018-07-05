@@ -12,7 +12,12 @@ module.exports =
 	
 	getTilley: function()
 	{
-		channel.send("world, im a function"); //cant use functions unless discord.js is sent????
+		return channel.send("world, im a function"); //cant use functions unless discord.js is sent????
+	},
+	
+	getKieran : function()
+	{
+		return "world, I'm a Kieran function";
 	}
 }
 	

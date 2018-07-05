@@ -3,6 +3,7 @@ const ping = require('ping'); //will reqire NPM install:  "npm i ping"
 const client = new Discord.Client();
 const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
+const lottoCommands = require("./commands/lotto");
 
 const prefix = "!ble ";
 const lottoArr = [];
@@ -44,72 +45,60 @@ client.on('message', msg =>
 				break;
 				
 			case 'lottoadd':
+			
 				var addTos = [];
 				if(params[2] != undefined)//Just check there's atleast one
 				{
 					//Adds multiple.
 					for(var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
 					{
-						msg.reply('adding: ' + params[i]);
-						lottoArr.push(params[i]);
+						addTos[i-2] = params[i];
 					}
 				}
-				console.log('lottoArr = ' + lottoArr); //debug list
+				
+				lottoCommands.add(addTos);
+				
 				break;
 			
 			case 'lottoclear':
-				lottoArr = [];//Essentially wipes the array by creating a new one.
-				msg.reply('list is now cleared');
-				console.log('list has been cleared');	
+
+				lottoCommands.clear();
+				msg.react('👍');
+				
 				break;
 				
 			case 'lottoall':
-				var allString = "";
-				var i;
-				for (i = 0; i < lottoArr.length; i++)
-				{
-					allString += lottoArr[i] + ", ";
-				}
-				allString = allString.substring(0, allString.length - 2);
 
-				if(allString.length > 0) 
+				var lotList = lottoCommands.all();
+				if(lotList != undefined)
 				{
-					channel.send(allString);
+					channel.send("So far in the Lotto list: " + lottoCommands.all());	
 				}
 				else
 				{
 					channel.send('Lotto list is empty. Use LottoAdd command to add to list.');
 				}
+						
 				break;
 			
 			case 'lottorand':
-				if(lottoArr.length > 0)
+
+				var winner = lottoCommands.rand();
+				if(winner != undefined)
 				{
-					var rand = getRandomInt(0, lottoArr.length); 
-					msg.reply("and the winner is: ");
-					channel.send(lottoArr[rand]);
-					console.log(rand + lottoArr[rand]);
-					lastWinner = lottoArr[rand];
+					msg.reply('and the winner is... \n' + winner + '!');
 				}
 				else
 				{
-					msg.reply('no lucky draw today. Lotto list is empty!');
+					msg.reply("looks like there's no items in the lotto list! Maybe try using LottoAdd first.");
 				}
+				
 				break;
 				
 			case 'lottowinner':
-				if(lastWinner != undefined)
-				{
-					msg.reply("last winner was: `" + lastWinner + "`")
-				}
-				else
-				{
-					msg.reply('no winners yet!');
-					if(lottoArr.length > 0)
-					{
-						msg.reply("but the list isn't empty.. Why not give it a spin with LottoRand?");
-					}
-				}
+				
+				msg.reply(lottoCommands.winner());
+				
 				break;
 				
 			case 'checkserver':
@@ -126,7 +115,7 @@ client.on('message', msg =>
 			case 'tilleytest':
 				var test = TilleyTest.testing;		
 				//run function from variable in TilleyTest;
-				channel.send(TilleyTest.res());
+				channel.send(TilleyTest.getKieran());
 				//print string variable i tilley test
 				channel.send(test);
 				break;
@@ -164,12 +153,4 @@ function GetHelpString()
 	"\t• LottoAll: Displays everything in the Lotto roll list.\n" + 
 	"\t• LottoRand: Chooses a random from the Lotto roll list.\n" + 
 	"\t• LottoWinner: Who was the last to win?\n";
-}
-
-//Min is inclusive, max exclusive
-function getRandomInt(min, max)
-{
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min)) + min;
 }
