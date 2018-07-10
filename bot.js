@@ -4,6 +4,7 @@ const client = new Discord.Client();
 const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
 const lottoCommands = require("./commands/lotto");
+const pollCommands = require("./commands/polls");
 const donation = require ("./scripts/donationTracker");
 const thief = require("./scripts/theif");
 
@@ -12,10 +13,6 @@ const theifPre = "!thief";
 
 
 var allowedRoles = [];
-
-
-
-
 
 
 client.on('ready', () => 
@@ -152,6 +149,54 @@ client.on('message', msg =>
 					});
 					break;
 				
+				case 'addpoll':
+
+				if(params[2] != undefined)
+				{
+					pollCommands.addPoll(params[2]);
+				}
+				else
+				{
+					msg.reply("please give the poll a name.");
+				}
+
+				break;
+
+				case 'addpolloption':
+
+				if(params[2] != undefined && params[3] != undefined)
+				{
+					pollCommands.addPollOption(params[2], params[3]);
+				}
+				else
+				{
+					msg.reply("arguments for AddPollOption are; Poll name, and Poll option name");
+				}
+
+				break;
+
+				case 'votepoll':
+
+				if(params[2] != undefined && params[3] != undefined)
+				{
+					pollCommands.votePoll(params[2], params[3]);
+				}
+				else
+				{
+					msg.reply("arguments for votepoll are; Poll name and Poll option name. Make sure these exist!");
+				}
+
+				break;
+
+				case 'pollresults':
+
+				if(params[2] != undefined)
+				{
+					
+				}
+
+				break;
+
 				case 'tilleytest':
 					var test = TilleyTest.testing;		
 					//run function from variable in TilleyTest;
@@ -174,7 +219,7 @@ client.on('message', msg =>
 				//allowedRoles.push(roles);
 				
 				break;
-				
+
 				case 'thief':
 					thief.start(command)
 					break;
