@@ -78,13 +78,17 @@ module.exports =
 
 	clearPoll : function(pollName)
 	{
+		var cleared = false;
 		for(var i = 0; i < polls.length; i++)
 		{
 			if(polls[i].pollName == pollName)
 			{
+				cleared = true;
 				polls = polls.splice(i, 1);
 			}
 		}
+
+		return cleared;
 	},
 
 	votePoll : function(pollName, optionName)
@@ -98,13 +102,26 @@ module.exports =
 	results : function(pollName)
 	{
 		var poll = getPoll(pollName);
-		var results = "Results:";
+		var results = "Results:\n";
 
 		(poll.items).forEach(element => 
 		{
-			results += "\n\t" + element.name + ": " + element.votes;
+			results += "\n\t`" + element.name + "`: " + element.votes;
 		});
 
 		return results;
+	},
+
+	getOptions : function(pollName)
+	{
+		var poll = getPoll(pollName);
+		var options = "Options for " + pollName + ":\n";
+
+		(poll.items).forEach(element => 
+		{
+			options += "\n\t`" + element.name + "`";
+		});
+
+		return options;
 	}
 }

@@ -188,11 +188,30 @@ client.on('message', msg =>
 
 				break;
 
+				case 'polloptions':
+
+				if(params[2] != undefined)
+				{
+					msg.reply("\n" + pollCommands.getOptions(params[2]));
+				}
+
+				break;
+
 				case 'pollresults':
 
 				if(params[2] != undefined)
 				{
 					msg.reply("\n" + pollCommands.results(params[2]));
+				}
+
+				break;
+
+				case 'pollclear':
+
+				if(params[2] != undefined)
+				{
+					var result = pollCommands.clearPoll(params[2]) ? "been" : "not been";
+					msg.reply(" poll `" + params[2] + "` has " + result + " cleared.");
 				}
 
 				break;
@@ -259,8 +278,10 @@ function GetHelpString()
 	"\t• LottoRand: Chooses a random from the Lotto roll list.\n" + 
 	"\t• LottoWinner: Who was the last to win?\n" + 
 	"\n\t**__Polls__**\n" + 
-	"\t• AddPoll: Adds a new poll with the name given as argument one. It's now referenced by this name." + 
-	"\t• AddPollOption: Adds a new option to the given poll. Args: [1] Poll name, read above. [2] Option name." +
-	"\t• VotePoll: Vote for your poll! Args: [1] Poll name [2] Option name you want to vote for." + 
-	"\t• PollResults: Get the results so far for your poll. Args: [1] Poll name";
+	"\t• AddPoll: Adds a new poll with the name given. It's now referenced by this name.\n\t\tArgs: [1] Poll name\n" + 
+	"\t• AddPollOption: Adds a new option to the given poll. \n\t\tArgs: [1] Poll name, read above. [2] Option name.\n" +
+	"\t• VotePoll: Vote for your poll! \n\t\tArgs: [1] Poll name [2] Option name you want to vote for.\n" + 
+	"\t• PollOptions: Get all available options for this poll. \n\t\tArgs: [1] Poll name\n" + 
+	"\t• PollResults: Get the results so far for your poll. \n\t\tArgs: [1] Poll name\n" + 
+	"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n";
 }
