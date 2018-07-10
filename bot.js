@@ -5,8 +5,8 @@ const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
 const lottoCommands = require("./commands/lotto");
 const pollCommands = require("./commands/polls");
-const donation = require ("./scripts/donationTracker");
-const thief = require("./scripts/theif");
+const donation = require("./scripts/donationTracker");
+const thief = require("./scripts/thief");
 
 const prefix = "!ble ";
 const theifPre = "!thief";
@@ -17,141 +17,144 @@ var allowedRoles = [];
 
 client.on('ready', () => 
 {
-  console.log(`Logged in as ${client.user.tag}!`);
-  client.user.setActivity(prefix + 'help');
+	console.log(`Logged in as ${client.user.tag}!`);
+	client.user.setActivity(prefix + 'help');
 });
 
-client.on('message', msg => 
+client.on('message', msg =>
 {
-	
-	if(msg.content.startsWith(prefix))
+
+	//Checks if it starts with our prefix, or if it's been authored by a bot. Breaks out if either.
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const channel = msg.channel;
+	var params = msg.content.split(' '); //gets all values into an array. Including the command at 1 and prefix at 0..
+	var command = params[1].toLowerCase(); //second in array
+
+	console.log("Command : " + command);
+	var userHasPermissions = false;
+
+	//Checking if this user has one of the allowed role to use bots.
+	if (allowedRoles.length > 0) 
 	{
-		const channel = msg.channel;
-		var params = msg.content.split(' '); //gets all values into an array. Including the command at 1 and prefix at 0..
-		var command = params[1].toLowerCase(); //second in array
-		
-		console.log("Command : " + command);
-		var userHasPermissions = false;
-		
-		//Checking if this user has one of the allowed role to use bots.
-		if(allowedRoles.length > 0)
+		console.log('Only specific roles can use commands. ');
+
+		for (var i = 0; i < allowedRoles.length; i++) 
 		{
-			console.log('Only specific roles can use commands. ');
-						
-			for(var i = 0; i < allowedRoles.length; i++)
+			var current = allowedRoles[i];
+			console.log('Checking for role: ' + current.name);
+			if (msg.member.roles.has(current.id)) 
 			{
-				var current = allowedRoles[i];
-				console.log('Checking for role: ' + current.name);
-				if(msg.member.roles.has(current.id))
+				userHasPermissions = true;
+			}
+		}
+
+		if (userHasPermissions === true)
+		{
+			console.log('This user is allowed.');
+		}
+		else 
+		{
+			console.log('This user doesnt have credentials required to use commands.');
+		}
+
+	}
+	else 
+	{
+		userHasPermissions = true;
+	}
+
+	if (userHasPermissions) 
+	{
+		switch (command) 
+		{
+			case 'help':
+				var helpString = GetHelpString();
+				console.log(helpString);
+				channel.send(helpString);
+				break;
+
+			case 'ping':
+				msg.reply('pong MOTHER FUCKER');
+				break;
+
+			case 'api':
+				msg.reply('https://discord.js.org/');
+				break;
+
+			case 'lottoadd':
+
+				var addTos = [];
+				if (params[2] != undefined)//Just check there's atleast one
 				{
-					userHasPermissions = true;
+					//Adds multiple.
+					for (var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
+					{
+						addTos[i - 2] = params[i];
+					}
 				}
-			}
-			
-			if(userHasPermissions === true)
-			{
-				console.log('This user is allowed.');				
-			}
-			else
-			{
-				console.log('This user doesnt have credentials required to use commands.');
-			}
 
-		}
-		else
-		{
-			userHasPermissions = true;
-		}
-		
-		if(userHasPermissions)
-		{
-			switch (command)
-			{
-				case 'help':
-					var helpString = GetHelpString();
-					console.log(helpString);
-					channel.send(helpString);
-					break;
-					
-				case 'ping':
-					msg.reply('pong MOTHER FUCKER');
-					break;
-					
-				case 'api':
-					msg.reply('https://discord.js.org/');
-					break;
-					
-				case 'lottoadd':
-				
-					var addTos = [];
-					if(params[2] != undefined)//Just check there's atleast one
+				lottoCommands.add(addTos);
+
+				break;
+
+			case 'lottoclear':
+
+				lottoCommands.clear();
+				msg.react('👍');
+
+				break;
+
+			case 'lottoall':
+
+				var lotList = lottoCommands.all();
+				if (lotList != undefined)
+				{
+					channel.send("So far in the Lotto list: " + lottoCommands.all());
+				}
+				else
+				{
+					channel.send('Lotto list is empty. Use LottoAdd command to add to list.');
+				}
+
+				break;
+
+			case 'lottorand':
+
+				var winner = lottoCommands.rand();
+				if (winner != undefined)
+				{
+					msg.reply('and the winner is... \n' + winner + '!');
+				}
+				else
+				{
+					msg.reply("looks like there's no items in the lotto list! Maybe try using LottoAdd first.");
+				}
+
+				break;
+
+			case 'lottowinner':
+
+				msg.reply(lottoCommands.winner());
+
+				break;
+
+			case 'checkserver':
+				var hosts = ['google.com', '46.251.234.220'];
+				hosts.forEach(function (host)
+				{
+					ping.sys.probe(host, function (isAlive)
 					{
-						//Adds multiple.
-						for(var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
-						{
-							addTos[i-2] = params[i];
-						}
-					}
-					
-					lottoCommands.add(addTos);
-					
-					break;
-				
-				case 'lottoclear':
-	
-					lottoCommands.clear();
-					msg.react('👍');
-					
-					break;
-					
-				case 'lottoall':
-	
-					var lotList = lottoCommands.all();
-					if(lotList != undefined)
-					{
-						channel.send("So far in the Lotto list: " + lottoCommands.all());	
-					}
-					else
-					{
-						channel.send('Lotto list is empty. Use LottoAdd command to add to list.');
-					}
-							
-					break;
-				
-				case 'lottorand':
-	
-					var winner = lottoCommands.rand();
-					if(winner != undefined)
-					{
-						msg.reply('and the winner is... \n' + winner + '!');
-					}
-					else
-					{
-						msg.reply("looks like there's no items in the lotto list! Maybe try using LottoAdd first.");
-					}
-					
-					break;
-					
-				case 'lottowinner':
-					
-					msg.reply(lottoCommands.winner());
-					
-					break;
-					
-				case 'checkserver':
-					var hosts = ['google.com', '46.251.234.220'];
-					hosts.forEach(function(host){
-						ping.sys.probe(host, function(isAlive){
-							var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
-							channel.send(msg);
-							console.log(msg);
-						});
+						var msg = isAlive ? 'host ' + host + ' is alive' : 'host ' + host + ' is dead';
+						channel.send(msg);
+						console.log(msg);
 					});
-					break;
-				
-				case 'addpoll':
+				});
+				break;
 
-				if(params[2] != undefined)
+			case 'addpoll':
+
+				if (params[2] != undefined)
 				{
 					pollCommands.addPoll(params[2]);
 				}
@@ -162,9 +165,9 @@ client.on('message', msg =>
 
 				break;
 
-				case 'addpolloption':
+			case 'addpolloption':
 
-				if(params[2] != undefined && params[3] != undefined)
+				if (params[2] != undefined && params[3] != undefined)
 				{
 					pollCommands.addPollOption(params[2], params[3]);
 				}
@@ -175,9 +178,9 @@ client.on('message', msg =>
 
 				break;
 
-				case 'votepoll':
+			case 'votepoll':
 
-				if(params[2] != undefined && params[3] != undefined)
+				if (params[2] != undefined && params[3] != undefined)
 				{
 					pollCommands.votePoll(params[2], params[3]);
 				}
@@ -188,27 +191,27 @@ client.on('message', msg =>
 
 				break;
 
-				case 'polloptions':
+			case 'polloptions':
 
-				if(params[2] != undefined)
+				if (params[2] != undefined)
 				{
 					msg.reply("\n" + pollCommands.getOptions(params[2]));
 				}
 
 				break;
 
-				case 'pollresults':
+			case 'pollresults':
 
-				if(params[2] != undefined)
+				if (params[2] != undefined)
 				{
 					msg.reply("\n" + pollCommands.results(params[2]));
 				}
 
 				break;
 
-				case 'pollclear':
+			case 'pollclear':
 
-				if(params[2] != undefined)
+				if (params[2] != undefined)
 				{
 					var result = pollCommands.clearPoll(params[2]) ? "been" : "not been";
 					msg.reply(" poll `" + params[2] + "` has " + result + " cleared.");
@@ -216,38 +219,37 @@ client.on('message', msg =>
 
 				break;
 
-				case 'tilleytest':
-					var test = TilleyTest.testing;		
-					//run function from variable in TilleyTest;
-					channel.send(TilleyTest.getKieran());
-					//print string variable i tilley test
-					channel.send(test);
-					break;
-					
-				case 'kieranexperimental':
-				
+			case 'tilleytest':
+				var test = TilleyTest.testing;
+				//run function from variable in TilleyTest;
+				channel.send(TilleyTest.getKieran());
+				//print string variable i tilley test
+				channel.send(test);
+				break;
+
+			case 'kieranexperimental':
+
 				var roles = [];
-				for(var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
+				for (var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
 				{
 					var thisRole = msg.guild.roles.find("name", params[i]);
 					console.log('Adding role: ' + thisRole.name);
 					allowedRoles.push(thisRole);
-					roles[i-2] = thisRole;
-				} 
-				
+					roles[i - 2] = thisRole;
+				}
+
 				//allowedRoles.push(roles);
-				
+
 				break;
 
-				case 'thief':
-					thief.start(command)
-					break;
-					
-				default:
-					console.log('no command found');
-					msg.reply("There is no command: < " + command + " > check your shit");
-			}
-		}		
+			case 'thief':
+				thief.start(command)
+				break;
+
+			default:
+				console.log('no command found');
+				msg.reply("There is no command: < " + command + " > check your shit");
+		}
 	}
 });
 
@@ -255,7 +257,7 @@ client.on('message', msg =>
 
 //	---------------------------------
 
-	client.login(ConfigFile.token);
+client.login(ConfigFile.token);
 
 //	----------------------------------
 
@@ -268,20 +270,20 @@ client.on('message', msg =>
 function GetHelpString()
 {
 	return "\n\n*Commands*:\n" +
-	"\t**__Assortment__**\n" +
-	"\t• Ping: |\n\t\t\t\t\t•\n\t\t\t\t\t\t\t|\n" + 
-	"\t• API: Cheeky link to the Node.js API.\n" +
-	"\n\t**__Lotto__**\n" + 
-	"\t• LottoAdd: Adds to the Lotto roll list.\n" + 
-	"\t• LottoClear: Clears the Lotto roll list.\n" + 
-	"\t• LottoAll: Displays everything in the Lotto roll list.\n" + 
-	"\t• LottoRand: Chooses a random from the Lotto roll list.\n" + 
-	"\t• LottoWinner: Who was the last to win?\n" + 
-	"\n\t**__Polls__**\n" + 
-	"\t• AddPoll: Adds a new poll with the name given. It's now referenced by this name.\n\t\tArgs: [1] Poll name\n" + 
-	"\t• AddPollOption: Adds a new option to the given poll. \n\t\tArgs: [1] Poll name, read above. [2] Option name.\n" +
-	"\t• VotePoll: Vote for your poll! \n\t\tArgs: [1] Poll name [2] Option name you want to vote for.\n" + 
-	"\t• PollOptions: Get all available options for this poll. \n\t\tArgs: [1] Poll name\n" + 
-	"\t• PollResults: Get the results so far for your poll. \n\t\tArgs: [1] Poll name\n" + 
-	"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n";
+		"\t**__Assortment__**\n" +
+		"\t• Ping: |\n\t\t\t\t\t•\n\t\t\t\t\t\t\t|\n" +
+		"\t• API: Cheeky link to the Node.js API.\n" +
+		"\n\t**__Lotto__**\n" +
+		"\t• LottoAdd: Adds to the Lotto roll list.\n" +
+		"\t• LottoClear: Clears the Lotto roll list.\n" +
+		"\t• LottoAll: Displays everything in the Lotto roll list.\n" +
+		"\t• LottoRand: Chooses a random from the Lotto roll list.\n" +
+		"\t• LottoWinner: Who was the last to win?\n" +
+		"\n\t**__Polls__**\n" +
+		"\t• AddPoll: Adds a new poll with the name given. It's now referenced by this name.\n\t\tArgs: [1] Poll name\n" +
+		"\t• AddPollOption: Adds a new option to the given poll. \n\t\tArgs: [1] Poll name, read above. [2] Option name.\n" +
+		"\t• VotePoll: Vote for your poll! \n\t\tArgs: [1] Poll name [2] Option name you want to vote for.\n" +
+		"\t• PollOptions: Get all available options for this poll. \n\t\tArgs: [1] Poll name\n" +
+		"\t• PollResults: Get the results so far for your poll. \n\t\tArgs: [1] Poll name\n" +
+		"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n";
 }
