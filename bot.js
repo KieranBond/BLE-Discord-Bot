@@ -192,7 +192,7 @@ client.on('message', msg =>
 
 				if(params[2] != undefined)
 				{
-					
+					msg.reply("\n" + pollCommands.results(params[2]));
 				}
 
 				break;

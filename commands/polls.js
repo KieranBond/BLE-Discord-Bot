@@ -6,7 +6,7 @@ var polls = [];
 function Poll(name, items)
 {
 	this.pollName = name;
-	this.items = items;
+	this.items = items;// []
 }
 
 function PollItem(name)
@@ -95,27 +95,16 @@ module.exports =
 		console.log(pollItem.votes);
 	},
 	
-	results : function()
+	results : function(pollName)
 	{
+		var poll = getPoll(pollName);
+		var results = "Results:";
 
-	},
+		(poll.items).forEach(element => 
+		{
+			results += "\n\t" + element.name + ": " + element.votes;
+		});
 
-	winner : function()
-	{
-		if(lastWinner != undefined)
-		{
-			return "last winner was: `" + lastWinner + "`";
-		}
-		else
-		{
-			if(lottoArr.length > 0)
-			{
-				return "no winners yet! \nBut the list isn't empty.. Why not give it a spin with LottoRand?";
-			}
-			else
-			{
-				return "no winners yet!";
-			}
-		}
+		return results;
 	}
 }
