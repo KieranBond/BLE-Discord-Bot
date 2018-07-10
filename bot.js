@@ -257,5 +257,10 @@ function GetHelpString()
 	"\t• LottoClear: Clears the Lotto roll list.\n" + 
 	"\t• LottoAll: Displays everything in the Lotto roll list.\n" + 
 	"\t• LottoRand: Chooses a random from the Lotto roll list.\n" + 
-	"\t• LottoWinner: Who was the last to win?\n";
+	"\t• LottoWinner: Who was the last to win?\n" + 
+	"\n\t**__Polls__**\n" + 
+	"\t• AddPoll: Adds a new poll with the name given as argument one. It's now referenced by this name." + 
+	"\t• AddPollOption: Adds a new option to the given poll. Args: [1] Poll name, read above. [2] Option name." +
+	"\t• VotePoll: Vote for your poll! Args: [1] Poll name [2] Option name you want to vote for." + 
+	"\t• PollResults: Get the results so far for your poll. Args: [1] Poll name";
 }
