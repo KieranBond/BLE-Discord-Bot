@@ -339,6 +339,7 @@ function GetHelpString()
 		"\t**__Assortment__**\n" +
 		"\t• Ping: |\n\t\t\t\t\t•\n\t\t\t\t\t\t\t|\n" +
 		"\t• API: Cheeky link to the Node.js API.\n" +
+		"\t• Github | Repo : A link to our Github Repo for this bot.\n" +
 		"\n\t**__Lotto__**\n" +
 		"\t• LottoAdd: Adds to the Lotto roll list.\n" +
 		"\t• LottoClear: Clears the Lotto roll list.\n" +
