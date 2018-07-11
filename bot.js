@@ -11,6 +11,7 @@ const thief = require("./scripts/thief");
 const prefix = "!ble ";
 const theifPre = "!thief";
 
+const repoLink = "https://github.com/KieranBond/BLE-Discord-Bot";
 
 var allowedRoles = [];
 
@@ -90,6 +91,16 @@ client.on('message', msg =>
 			case 'api':
 				msg.reply('https://discord.js.org/');
 				break;
+
+			case 'repo':
+			var embed = GetRepositoryEmbed(client);
+			msg.channel.send(embed);
+			break;
+
+			case 'github':
+			var embed = GetRepositoryEmbed(client);
+			msg.channel.send(embed);
+			break;
 
 			case 'lottoadd':
 
@@ -341,4 +352,15 @@ function GetHelpString()
 		"\t• PollOptions: Get all available options for this poll. \n\t\tArgs: [1] Poll name\n" +
 		"\t• PollResults: Get the results so far for your poll. \n\t\tArgs: [1] Poll name\n" +
 		"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n";
+}
+
+function GetRepositoryEmbed(client)
+{
+	const embed = new Discord.RichEmbed();
+	embed.setAuthor(client.user.username, client.user.displayAvatarURL);
+	embed.setTitle("BLE+ Discord bot - Github Repository");
+	embed.setURL(repoLink);
+	embed.setTimestamp(new Date());
+
+	return embed;
 }
