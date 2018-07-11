@@ -1,12 +1,16 @@
-var lottoArr = [];
-var lastWinner;
+//var polls = [];
+var servers = [];
 
-var polls = [];
+function Server(serverID, polls)
+{
+	this.serverID = serverID;
+	this.polls = polls;
+}
 
 function Poll(name, items)
 {
 	this.pollName = name;
-	this.items = items;// []
+	this.items = items;
 }
 
 function PollItem(name)
@@ -15,16 +19,34 @@ function PollItem(name)
 	this.votes = 0;
 }
 
-function vote(pollName, itemName)
+function vote(serverID, pollName, itemName)
 {
-	var pollItem = getPollItem(pollName, itemName);
+	var pollItem = getPollItem(serverID, pollName, itemName);
+	if(pollItem == undefined) return;
+	
 	pollItem.votes += 1;
 	console.log(pollItem.name + ' has ' + pollItem.votes + ' votes.');
-
+	return true;
 }
 
-function getPoll(pollName)
+function getServer(serverID)
 {
+	for(var i = 0; i < servers.length; i++)
+	{
+		if(servers[i].serverID == serverID)
+		{
+			return servers[i];
+		}
+	}
+}
+
+function getPoll(serverID, pollName)
+{
+	var server = getServer(serverID);
+	if(server == undefined) return;
+
+	var polls = server.polls;
+
 	for(var i = 0; i < polls.length; i++)
 	{
 		if(polls[i].pollName == pollName)
@@ -34,8 +56,13 @@ function getPoll(pollName)
 	}
 }
 
-function getPollItem(pollName, optionName)
+function getPollItem(serverID, pollName, optionName)
 {
+	var server = getServer(serverID);
+	if(server == undefined) return;
+
+	var polls = server.polls;
+
 	for(var i = 0; i < polls.length; i++)
 	{
 		if(polls[i].pollName == pollName)
@@ -54,30 +81,53 @@ function getPollItem(pollName, optionName)
 
 module.exports = 
 {	
-	addPoll : function(pollName)
+	Construct : function(serverIDs)
 	{
-		var pollArray = [];
-		var newPoll = new Poll(pollName, pollArray);
-		polls.push(newPoll);
-		console.log(polls);
+		serverIDs.forEach(element => 
+		{
+			var polls = [];
+			var activeServer = new Server(element, polls);
+			console.log("Adding guild: " + element);
+			servers.push(activeServer);
+		});
+	},
+
+	addPoll : function(serverID, pollName)
+	{
+		var server = getServer(serverID);
+		if(server == undefined) 
+		{
+			console.log("server is undefined?\n\t" + server + "\n\t" + server.serverID + "\n\t" + server.polls);
+			return;
+		}
+
+		var items = [];
+		var newPoll = new Poll(pollName, items);
+		server.polls.push(newPoll);
+		console.log(server.polls);
+		return true;
 	},
 	
-	addPollOption : function(pollName, optionName)
+	addPollOption : function(serverID, pollName, optionName)
 	{
 		var item = new PollItem(optionName);
-		var poll = getPoll(pollName);
+		var poll = getPoll(serverID, pollName);
+
+		if(poll == undefined) return;
+
 		poll.items.push(item);
 		console.log(poll.items);
+		return true;
+
 	},
 
-	clearAll : function()
+	clearPoll : function(serverID, pollName)
 	{
-		polls = [];
-		console.log('Cleared Polls Array');
-	},
+		var server = getServer(serverID);
+		if(server == undefined) return;
 
-	clearPoll : function(pollName)
-	{
+		var polls = server.polls;
+
 		var cleared = false;
 		for(var i = 0; i < polls.length; i++)
 		{
@@ -91,17 +141,16 @@ module.exports =
 		return cleared;
 	},
 
-	votePoll : function(pollName, optionName)
+	votePoll : function(serverID, pollName, optionName)
 	{
-		vote(pollName, optionName);
-
-		var pollItem = getPollItem(pollName, optionName);
-		console.log(pollItem.votes);
+		return vote(serverID, pollName, optionName);
 	},
 	
-	results : function(pollName)
+	results : function(serverID, pollName)
 	{
-		var poll = getPoll(pollName);
+		var poll = getPoll(serverID, pollName);
+		if(poll == undefined) return;
+
 		var results = "Results:\n";
 
 		(poll.items).forEach(element => 
@@ -112,9 +161,11 @@ module.exports =
 		return results;
 	},
 
-	getOptions : function(pollName)
+	getOptions : function(serverID, pollName)
 	{
-		var poll = getPoll(pollName);
+		var poll = getPoll(serverID, pollName);
+		if(poll == undefined) return;
+
 		var options = "Options for " + pollName + ":\n";
 
 		(poll.items).forEach(element => 

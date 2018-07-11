@@ -19,13 +19,22 @@ client.on('ready', () =>
 {
 	console.log(`Logged in as ${client.user.tag}!`);
 	client.user.setActivity(prefix + 'help');
+
+	var guilds = Array.from(client.guilds.values());
+	var ids = [];
+	guilds.forEach(element => 
+	{
+		ids.push(element);
+	});
+	//Setup each command set needing it.
+	console.log("Joined guilds with ids: " + ids);
+	pollCommands.Construct(ids);
 });
 
 client.on('message', msg =>
 {
-
 	//Checks if it starts with our prefix, or if it's been authored by a bot. Breaks out if either.
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (!msg.content.startsWith(prefix) || msg.author.bot) return;
 
 	const channel = msg.channel;
 	var params = msg.content.split(' '); //gets all values into an array. Including the command at 1 and prefix at 0..
@@ -156,7 +165,14 @@ client.on('message', msg =>
 
 				if (params[2] != undefined)
 				{
-					pollCommands.addPoll(params[2]);
+					if(pollCommands.addPoll(msg.guild, params[2]) != undefined)
+					{
+						msg.reply("successfully added new poll: `" + params[2] + "`");
+					}
+					else
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
 				}
 				else
 				{
@@ -169,7 +185,14 @@ client.on('message', msg =>
 
 				if (params[2] != undefined && params[3] != undefined)
 				{
-					pollCommands.addPollOption(params[2], params[3]);
+					if(pollCommands.addPollOption(msg.guild, params[2], params[3]) != undefined)
+					{
+						msg.reply("successfully added new poll option `" + params[3] + "` to `" + params[2] + "` poll.");
+					}
+					else
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
 				}
 				else
 				{
@@ -182,7 +205,14 @@ client.on('message', msg =>
 
 				if (params[2] != undefined && params[3] != undefined)
 				{
-					pollCommands.votePoll(params[2], params[3]);
+					if(pollCommands.votePoll(msg.guild, params[2], params[3]) != undefined)
+					{
+						msg.reply("vote added.");
+					}
+					else
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
 				}
 				else
 				{
@@ -195,7 +225,15 @@ client.on('message', msg =>
 
 				if (params[2] != undefined)
 				{
-					msg.reply("\n" + pollCommands.getOptions(params[2]));
+					var options = pollCommands.getOptions(msg.guild, params[2]);
+					if(options != undefined)
+					{
+						msg.reply("\n" + options);
+					}
+					else
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
 				}
 
 				break;
@@ -204,7 +242,16 @@ client.on('message', msg =>
 
 				if (params[2] != undefined)
 				{
-					msg.reply("\n" + pollCommands.results(params[2]));
+					var results = pollCommands.results(msg.guild, params[2]);
+					if(results != undefined)
+					{
+						msg.reply("\n" + results);
+					}
+					else
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
+					
 				}
 
 				break;
@@ -212,9 +259,17 @@ client.on('message', msg =>
 			case 'pollclear':
 
 				if (params[2] != undefined)
-				{
-					var result = pollCommands.clearPoll(params[2]) ? "been" : "not been";
-					msg.reply(" poll `" + params[2] + "` has " + result + " cleared.");
+				{					
+					var result = pollCommands.clearPoll(msg.guild, params[2]);
+					if(result == undefined)
+					{
+						msg.reply("unfortunately that command didn't work.. please consult !ble help");
+					}
+					else
+					{
+						result == true ? result = "been" : result = "not been";
+						msg.reply(" poll `" + params[2] + "` has " + result + " cleared.");
+					}
 				}
 
 				break;
