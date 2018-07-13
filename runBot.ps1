@@ -1,5 +1,5 @@
-﻿$NodePath = "C:\Users\145781\Desktop\node"
-$BotPath = "C:\Users\145781\Documents\GitHub\BLE-Discord-Bot\bot.js"
+﻿$BotDirectory = $PSScriptRoot
+$BotName = "bot.js"
+cd $BotDirectory
 
-cd $NodePath
-.\node.exe $BotPath
+node $BotName

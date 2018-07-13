@@ -22,7 +22,16 @@ function PollItem(name)
 function vote(serverID, pollName, itemName)
 {
 	var pollItem = getPollItem(serverID, pollName, itemName);
-	if(pollItem == undefined) return;
+	if(pollItem == undefined) 
+	{
+		var poll = getPoll(serverID, pollName);
+		if(poll == undefined) return;
+
+		pollItem = new PollItem(itemName);
+		pollItem.votes += 1;
+		poll.items.push(pollItem);
+		return true;
+	}
 	
 	pollItem.votes += 1;
 	console.log(pollItem.name + ' has ' + pollItem.votes + ' votes.');

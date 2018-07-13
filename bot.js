@@ -194,9 +194,16 @@ client.on('message', msg =>
 
 			case 'addpolloption':
 
+				var nameArr = params.splice(3);
+				var name = '';
+				nameArr.forEach(element => 
+				{
+					name += element + " ";
+				});
+
 				if (params[2] != undefined && params[3] != undefined)
 				{
-					if(pollCommands.addPollOption(msg.guild, params[2], params[3]) != undefined)
+					if(pollCommands.addPollOption(msg.guild, params[2], name) != undefined)
 					{
 						msg.reply("successfully added new poll option `" + params[3] + "` to `" + params[2] + "` poll.");
 					}
