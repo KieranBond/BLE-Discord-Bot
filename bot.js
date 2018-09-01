@@ -5,6 +5,7 @@ const ConfigFile = require("./Config.json");
 const TilleyTest = require("./scripts/tilleyTest");
 const lottoCommands = require("./commands/lotto");
 const pollCommands = require("./commands/polls");
+const roleCommands = require("./commands/roleAssigner");
 const donation = require("./scripts/donationTracker");
 const thief = require("./scripts/thief");
 
@@ -279,7 +280,7 @@ client.on('message', msg =>
 				if (params[2] != undefined)
 				{					
 					var result = pollCommands.clearPoll(msg.guild, params[2]);
-					if(result == undefined)
+					if(result == undefined || result instanceof Error)
 					{
 						msg.reply("unfortunately that command didn't work.. please consult !ble help");
 					}
@@ -302,14 +303,17 @@ client.on('message', msg =>
 
 			case 'kieranexperimental':
 
-				var roles = [];
-				for (var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
-				{
-					var thisRole = msg.guild.roles.find("name", params[i]);
-					console.log('Adding role: ' + thisRole.name);
-					allowedRoles.push(thisRole);
-					roles[i - 2] = thisRole;
-				}
+				roleCommands.addRole(msg.guild, msg.member, params[2]);
+
+				//var roles = guild.roles;// Dict< roleID, roleName >
+
+				// for (var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
+				// {
+				// 	var thisRole = msg.guild.roles.find("name", params[i]);
+				// 	console.log('Adding role: ' + thisRole.name);
+				// 	allowedRoles.push(thisRole);
+				// 	roles[i - 2] = thisRole;
+				// }
 
 				//allowedRoles.push(roles);
 
