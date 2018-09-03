@@ -293,6 +293,18 @@ client.on('message', msg =>
 
 				break;
 
+			case 'roleadd':
+
+				roleCommands.addRole(msg.guild, msg.member, params[2]);
+
+				break;
+			
+			case 'roleremove':
+
+				roleCommands.removeRole(msg.guild, msg.member, params[2]);
+
+				break;
+
 			case 'tilleytest':
 				var test = TilleyTest.testing;
 				//run function from variable in TilleyTest;
@@ -303,19 +315,7 @@ client.on('message', msg =>
 
 			case 'kieranexperimental':
 
-				roleCommands.addRole(msg.guild, msg.member, params[2]);
-
-				//var roles = guild.roles;// Dict< roleID, roleName >
-
-				// for (var i = 2; i < params.length; i++)//Go through params, make this a bit more dynamic.
-				// {
-				// 	var thisRole = msg.guild.roles.find("name", params[i]);
-				// 	console.log('Adding role: ' + thisRole.name);
-				// 	allowedRoles.push(thisRole);
-				// 	roles[i - 2] = thisRole;
-				// }
-
-				//allowedRoles.push(roles);
+				roleCommands.removeRole(msg.guild, msg.member, params[2]);
 
 				break;
 
@@ -329,7 +329,6 @@ client.on('message', msg =>
 		}
 	}
 });
-
 
 
 //	---------------------------------
@@ -363,7 +362,10 @@ function GetHelpString()
 		"\t• VotePoll: Vote for your poll! \n\t\tArgs: [1] Poll name [2] Option name you want to vote for.\n" +
 		"\t• PollOptions: Get all available options for this poll. \n\t\tArgs: [1] Poll name\n" +
 		"\t• PollResults: Get the results so far for your poll. \n\t\tArgs: [1] Poll name\n" +
-		"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n";
+		"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n" + 
+		"\n\t**__Roles__**\n" +
+		"\t• RoleAdd: Give yourself a role! Must be below the role of the bot or this doesn't work.\n\t\tArgs: [1] Role Name or ID\n" + 
+		"\t• RoleRemove: Remove a role from yourself! You need to have the role to remove it. FYI, might not be able to re-add said role.\n\t\tArgs: [1] Role Name or ID\n";
 }
 
 function GetRepositoryEmbed(client)
