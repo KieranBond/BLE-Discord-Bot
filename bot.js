@@ -295,13 +295,15 @@ client.on('message', msg =>
 
 			case 'roleadd':
 
-				roleCommands.addRole(msg.guild, msg.member, params[2]);
+				var reply = roleCommands.addRole(msg.guild, msg.member, params[2]);
+				channel.send(reply);
 
 				break;
 			
 			case 'roleremove':
 
-				roleCommands.removeRole(msg.guild, msg.member, params[2]);
+				var reply = roleCommands.removeRole(msg.guild, msg.member, params[2]);
+				channel.send(reply);
 
 				break;
 
@@ -316,7 +318,7 @@ client.on('message', msg =>
 			case 'kieranexperimental':
 
 				roleCommands.removeRole(msg.guild, msg.member, params[2]);
-
+				
 				break;
 
 			case 'thief':
@@ -365,7 +367,7 @@ function GetHelpString()
 		"\t• PollClear: Clear this poll of all results and options.\n\t\tArgs: [1] Poll name\n" + 
 		"\n\t**__Roles__**\n" +
 		"\t• RoleAdd: Give yourself a role! Must be below the role of the bot or this doesn't work.\n\t\tArgs: [1] Role Name or ID\n" + 
-		"\t• RoleRemove: Remove a role from yourself! You need to have the role to remove it. FYI, might not be able to re-add said role.\n\t\tArgs: [1] Role Name or ID\n";
+		"\t• RoleRemove: Remove a role from yourself! You need to have the role to remove it.\n\t\tArgs: [1] Role Name or ID\n";
 }
 
 function GetRepositoryEmbed(client)
