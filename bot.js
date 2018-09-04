@@ -13,6 +13,12 @@ const prefix = "!ble ";
 const theifPre = "!thief";
 
 const repoLink = "https://github.com/KieranBond/BLE-Discord-Bot";
+const githubAPIBaseURI = "api.github.com";
+const masterURI = "/repos/KieranBond/BLE-Discord-Bot/git/refs/heads/master";
+const commitsURI = "/repos/KieranBond/BLE-Discord-Bot/git/commits";
+
+const request = require('request'); //npm i request
+const https = require("https");
 
 var allowedRoles = [];
 
@@ -317,7 +323,7 @@ client.on('message', msg =>
 
 			case 'kieranexperimental':
 
-				roleCommands.removeRole(msg.guild, msg.member, params[2]);
+				msg.reply(GetRepositoryLastCommitData(githubAPIBaseURI, masterURI));
 				
 				break;
 
@@ -379,4 +385,109 @@ function GetRepositoryEmbed(client)
 	embed.setTimestamp(new Date());
 
 	return embed;
+}
+
+function GetRepositoryLastCommitData(baseURI, pathToMaster)
+{
+	//https://developer.github.com/v3/repos/commits/#get-a-single-commit
+	//https://api.github.com/repos/KieranBond/BLE-Discord-Bot/git/refs/heads/master
+
+	//https://api.github.com/repos/izuzak/pmrpc/git/refs/heads/master //example
+	//https://api.github.com/repos/izuzak/pmrpc/git/commits/fd6973f430a3367ad718ff049f1b075843913d6f //Commit handle example
+	
+	//https://stackoverflow.com/questions/15919635/on-github-api-what-is-the-best-way-to-get-the-last-commit-message-associated-w
+	//https://stackoverflow.com/questions/15377526/how-to-connect-to-github-api-using-nodejs-from-a-secure-network
+
+	var options = 
+	{
+		host: "api.github.com",
+		path: "/repos/KieranBond/BLE-Discord-Bot/git/refs/heads/master",
+		method: 'GET',
+		headers: 
+		{
+			'User-Agent':'KieranBond'
+		}
+	}
+
+	try
+	{
+
+		var requests = https.request(options, function(response)
+		{
+			var body = '';
+			
+			response.on('error', function(error)
+			{
+				console.log(error);
+				return error;
+			});
+
+			response.on('data', function (chunk)
+			{
+				body += chunk;
+				console.log(body);
+			});
+			
+			response.on('end', function()
+			{
+				try
+				{
+
+					var jsn = JSON.parse(body);
+					console.log(jsn);
+					var obj = JSON.parse(jsn.object);
+					console.log(obj);
+					var sha = obj.sha;
+					
+					console.log(sha);
+					return sha;
+				}
+				catch(error)
+				{
+					console.log(error);
+					return error;
+				}
+			});
+			
+		})
+	}
+	catch(error)
+	{
+		console.log(error);
+		return error;
+	}
+		
+		// var reqOptions = 
+	// {
+	// 	uri: baseURI,
+	// 	method: "GET",
+	// 	json: true,
+	// 	headers:
+	// 	{
+	// 		'User-Agent': 'KieranBond'
+	// 	}
+	// };
+
+	// request.get(reqOptions, function (error, response, body)
+	// {
+	// 	if(error) console.log("Request error: " + error);
+	// 	if(response) console.log("Response: " + response);
+	// 	if(body)
+	// 	{
+	// 		console.log("Body: " + body);
+	// 		try
+	// 		{
+	// 			let responseObj = JSON.parse(body);
+	// 			console.log(responseObj);
+	// 		}
+	// 		catch(error)
+	// 		{
+	// 			console.log(error);
+	// 		}
+	// 	} 
+
+		//var latestSHA = responseObj.object.sha;
+		//if(latestSHA) console.log("SHA: " + latestSHA);
+	//});
+
 }
