@@ -12,7 +12,7 @@ const thief = require("./scripts/thief");
 const prefix = "!ble ";
 const theifPre = "!thief";
 
-const repoLink = "https://github.com/KieranBond/BLE-Discord-Bot";
+const repoLink = "https://github.com/KieranBond/BLE-Discord-Bot"; //Update this if needed!
 
 var allowedRoles = [];
 
